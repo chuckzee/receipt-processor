@@ -9,7 +9,7 @@ app.use(express.json());
 
 // Base route
 app.get('/', (req, res) => {
-  res.send('Receipt Processor API');
+  res.send('hello fetch!');
 });
 
 // Apply routes
