@@ -16,5 +16,5 @@ app.get('/', (req, res) => {
 app.use('/receipts', receiptsRoutes);
 
 app.listen(port, () => {
-  return console.log(`Express is listening at http://localhost:${port}`);
+  return console.log(`Express is listening at http://localhost:${port}. Happy testing, Fetch!`);
 });
