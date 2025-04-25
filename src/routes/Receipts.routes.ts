@@ -29,7 +29,13 @@ router.get(
   (req: Request, res: Response) => {
     const { id } = req.params;
     const result = ReceiptsService.getResult(id);
-    res.status(200).json({ points: result?.points });
+    
+    if (!result) {
+      res.status(404).json({ error: "No receipt found for that ID." });
+      return;
+    }
+    
+    res.status(200).json({ points: result.points });
   }
 );
 
