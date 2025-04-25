@@ -1,5 +1,5 @@
 import { Receipt, ReceiptResult } from "../interfaces/Receipts";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 const receiptResults: Record<string, ReceiptResult> = {};
 
@@ -48,28 +48,30 @@ export function processReceipt(receipt: Receipt): { points: number } {
   if (timeParts.length === 2) {
     const hours = parseInt(timeParts[0], 10);
     const minutes = parseInt(timeParts[1], 10);
-    
+
     if (!isNaN(hours) && !isNaN(minutes)) {
       const timeInMinutes = hours * 60 + minutes;
       const after2pm = 14 * 60;
       const before4pm = 16 * 60;
-      
+
       if (timeInMinutes >= after2pm && timeInMinutes < before4pm) {
         points += 10;
       }
     }
   }
 
+  points = Math.floor(points);
+
   return { points };
 }
 
 export function saveResult(result: { points: number }): string {
   const id = uuidv4();
-  
-  receiptResults[id] = { 
-    points: result.points
+
+  receiptResults[id] = {
+    points: Math.floor(result.points),
   };
-  
+
   return id;
 }
 

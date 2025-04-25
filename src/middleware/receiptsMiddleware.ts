@@ -1,30 +1,65 @@
 import { Request, Response, NextFunction } from "express";
-import { Receipt } from "../interfaces/Receipts";
+import { Receipt, ReceiptResult } from "../interfaces/Receipts";
 import { Item } from "../interfaces/Item";
+import ReceiptsService from "../services/Receipts";
 
 // define some constants for canned error responses
 const INVALID_RECEIPT_RESPONSE = { error: "The receipt is invalid." };
+const INVALID_ID_RESPONSE = { error: "No receipt found for that ID." };
 const HTTP_BAD_REQUEST = 400;
+const HTTP_NOT_FOUND = 404;
+
+export const pointsValidationRules: Record<
+  keyof ReceiptResult,
+  Validator
+> = {
+  points: (value: unknown): boolean =>
+    typeof value === "number" &&
+    Number.isInteger(value) &&
+    value >= 0 &&
+    value <= Number.MAX_SAFE_INTEGER,
+};
 
 // for this project, using a homemade middleware but I've used express-validator for the same thing
 export const validateReceiptMiddleware = (
   req: Request,
   res: Response,
   next: NextFunction
-) => {
+): void => {
   if (!req.body || !validateReceipt(req.body)) {
     res.status(HTTP_BAD_REQUEST).json(INVALID_RECEIPT_RESPONSE);
     return;
   }
 
-  req.body as Receipt;
   next();
 };
 
-type Validator<T> = (value: unknown) => boolean;
+export const validatePointsRequestMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
+  const { id } = req.params;
+
+  if (!id || typeof id !== "string" || id.trim() === "") {
+    res.status(HTTP_BAD_REQUEST).json(INVALID_ID_RESPONSE);
+    return;
+  }
+
+  const result = ReceiptsService.getResult(id);
+
+  if (!result) {
+    res.status(HTTP_NOT_FOUND).json(INVALID_ID_RESPONSE);
+    return;
+  }
+
+  next();
+};
+
+type Validator = (value: unknown) => boolean;
 
 // validation rules for POST'd receipts
-const validationRules: Record<keyof Receipt, Validator<unknown>> = {
+const validationRules: Record<keyof Receipt, Validator> = {
   retailer: (value: unknown): boolean =>
     typeof value === "string" && value.match(/^[\w\s\-&]+$/) !== null,
 
@@ -45,9 +80,9 @@ const validationRules: Record<keyof Receipt, Validator<unknown>> = {
 };
 
 // more validation rules but for POST'd items in the receipt JSON
-const itemValidationRules: Record<keyof Item, Validator<unknown>> = {
+const itemValidationRules: Record<keyof Item, Validator> = {
   shortDescription: (value: unknown): boolean =>
-    typeof value === "string" && value.match(/^[\w\s\-]+$/) !== null,
+    typeof value === "string" && value.match(/^[\w\s-]+$/) !== null,
 
   price: (value: unknown): boolean =>
     typeof value === "string" && value.match(/^\d+\.\d{2}$/) !== null,
