@@ -1,16 +1,17 @@
 {
   "name": "receipt-processor",
+  "description": "A simple receipt processor",
   "version": "1.0.0",
-  "main": "src/app.ts",
+  "main": "dist/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "tsc && node dist/app.js",
+    "lint": "eslint . --ext .ts",
     "dev": "tsc --watch && node src/app.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Chuck Zimmerman",
   "license": "ISC",
-  "description": "",
   "devDependencies": {
     "@eslint/js": "^9.25.1",
     "@types/express": "^5.0.1",
