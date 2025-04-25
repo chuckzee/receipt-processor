@@ -7,7 +7,9 @@ const router = express.Router();
 router.post('/process', validateReceiptMiddleware, (req: Request, res: Response) => {
   try {
     const result = ReceiptsService.processReceipt(req.body);
-    res.status(200).json(result);
+    const id = ReceiptsService.saveResult(result);
+    
+    res.status(200).json({ id });
   } catch (error) {
     console.error('Error processing receipt:', error);
     res.status(500).json({ error: 'Internal server error' });

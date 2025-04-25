@@ -7,3 +7,7 @@ export interface Receipt {
   items: Item[];
   total: string;
 }
+
+export interface ReceiptResult {
+  points: number;
+}
