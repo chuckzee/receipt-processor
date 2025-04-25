@@ -1,0 +1,24 @@
+{
+    "retailer": "*(O&$(*$&",
+    "purchaseDate": "202201-01",
+    "purchaseTime": "25:01",
+    "items": [
+      {
+        "shortDescription": "111111",
+        "price": "6.49"
+      },{
+        "shortDescription": "1111",
+        "price": "12.25"
+      },{
+        "shortDescription": "111",
+        "price": "1.26"
+      },{
+        "shortDescription": "1",
+        "price": "3.35"
+      },{
+        "shortDescription": "1",
+        "price": "12.00"
+      }
+    ],
+    "total": "35.35"
+  }
